@@ -1,8 +1,9 @@
 import joblib
 
-# Load model
+# Load trained model
 model = joblib.load("model/aqi_model.pkl")
 
+# AQI Category Function
 def aqi_category(aqi):
     if aqi <= 50:
         return "Good"
@@ -17,24 +18,27 @@ def aqi_category(aqi):
     else:
         return "Severe"
 
+# Suggestion Function
 def suggest_actions(category):
     suggestions = {
-        "Good": "Air quality is safe.",
+        "Good": "Air quality is safe. Maintain green practices.",
         "Satisfactory": "Reduce vehicle usage.",
-        "Moderate": "Use public transport.",
-        "Poor": "Wear masks and avoid outdoor activity.",
+        "Moderate": "Use public transport and avoid outdoor burning.",
+        "Poor": "Wear mask and avoid outdoor activities.",
         "Very Poor": "Work from home if possible.",
-        "Severe": "Emergency measures needed."
+        "Severe": "Emergency measures needed. Avoid going outside."
     }
     return suggestions[category]
 
-# Example input
-input_data = [[120, 180, 40, 10, 1.2, 30, 210, 200]]
+# Example Input
+# Order: PM2.5, PM10, NO2, SO2
+input_data = [[120, 180, 40, 10]]
 
-prediction = model.predict(input_data)[0]
-category = aqi_category(prediction)
+# Predict
+predicted_aqi = model.predict(input_data)[0]
+category = aqi_category(predicted_aqi)
 suggestion = suggest_actions(category)
 
-print("Predicted AQI:", prediction)
+print("Predicted AQI:", round(predicted_aqi, 2))
 print("Category:", category)
 print("Suggestion:", suggestion)
